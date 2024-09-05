@@ -73,16 +73,3 @@ jobs:
             ghcr.io/${{ env.REPO_NAME }}/product:latest
             ghcr.io/${{ env.REPO_NAME }}/product:${{ env.REF_NAME }}
             
-
-      - name: Update Kubernetes manifests
-        run: |
-          sed -i '/name: "oder"/{N;s|image: "ghcr.io/[^"]*"|image: "ghcr.io/${{ env.REPO_NAME }}/oder:${{ env.REF_NAME }}"|}' ./kubernetes/template/template.yml
-          sed -i '/name: "delivery"/{N;s|image: "ghcr.io/[^"]*"|image: "ghcr.io/${{ env.REPO_NAME }}/delivery:${{ env.REF_NAME }}"|}' ./kubernetes/template/template.yml
-          sed -i '/name: "product"/{N;s|image: "ghcr.io/[^"]*"|image: "ghcr.io/${{ env.REPO_NAME }}/product:${{ env.REF_NAME }}"|}' ./kubernetes/template/template.yml
-          git config --global user.email ${{ github.actor }}@users.noreply.github.com
-          git config --global user.name "${{ github.actor }}"
-          git add ./kubernetes/template/template.yml
-          git commit -m "Update image tag to ${{ env.REF_NAME }}"
-          git push origin HEAD:main
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
